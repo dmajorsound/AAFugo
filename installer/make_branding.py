@@ -15,18 +15,17 @@ BLUE = (76, 147, 220)
 
 
 def icon(size):
-    """The AAFUGO icon (blue rounded square, two clips, a paper plane taking off), drawn 4x and scaled down."""
+    """The AAFUGO icon (blue rounded square, two clips like OLAAF, a paper plane taking off), drawn 4x and scaled down."""
     S = size * 4
     im = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(im)
     k = S / 120.0
     P = lambda pts: [(x * k, y * k) for x, y in pts]
     d.rounded_rectangle([0, 0, S - 1, S - 1], radius=28 * k, fill=BLUE)
-    d.polygon(P([(22, 94), (22, 80), (50, 80), (58, 94)]), fill="white")
-    d.polygon(P([(22, 72), (30, 60), (48, 60), (48, 72)]), fill="white")
-    d.polygon(P([(98, 24), (44, 50), (62, 58)]), fill="white")
-    d.polygon(P([(98, 24), (62, 58), (72, 78)]), fill=(214, 230, 247))
-    d.polygon(P([(62, 58), (72, 78), (64, 64)]), fill=(179, 207, 238))
+    d.polygon(P([(88, 10), (40, 34), (62, 32)]), fill="white")
+    d.polygon(P([(88, 10), (62, 32), (61, 47)]), fill=(214, 230, 247))
+    d.polygon(P([(46, 68), (58, 52), (86, 52), (98, 68)]), fill="white")
+    d.polygon(P([(22, 90), (22, 74), (52, 74), (62, 90)]), fill="white")
     return im.resize((size, size), Image.LANCZOS)
 
 

@@ -24,15 +24,14 @@ FOOT = "Quit REAPER first. The installer is free and not signed by Apple, so mac
 
 
 def icon(d, x, y, size, s):
-    """The AAFUGO icon: blue rounded square, two clips, a paper plane taking off (120-unit grid)."""
+    """The AAFUGO icon: blue rounded square, two clips like OLAAF, a paper plane taking off (120-unit grid)."""
     k = size * s / 120.0
     P = lambda pts: [(x * s + px * k, y * s + py * k) for px, py in pts]
     d.rounded_rectangle([x * s, y * s, x * s + size * s, y * s + size * s], radius=28 * k, fill=BLUE)
-    d.polygon(P([(22, 94), (22, 80), (50, 80), (58, 94)]), fill="white")
-    d.polygon(P([(22, 72), (30, 60), (48, 60), (48, 72)]), fill="white")
-    d.polygon(P([(98, 24), (44, 50), (62, 58)]), fill="white")
-    d.polygon(P([(98, 24), (62, 58), (72, 78)]), fill=(214, 230, 247))
-    d.polygon(P([(62, 58), (72, 78), (64, 64)]), fill=(179, 207, 238))
+    d.polygon(P([(88, 10), (40, 34), (62, 32)]), fill="white")
+    d.polygon(P([(88, 10), (62, 32), (61, 47)]), fill=(214, 230, 247))
+    d.polygon(P([(46, 68), (58, 52), (86, 52), (98, 68)]), fill="white")
+    d.polygon(P([(22, 90), (22, 74), (52, 74), (62, 90)]), fill="white")
 
 
 def badge(d, cx, cy, r, text, f, s):
