@@ -1,0 +1,12 @@
+#!/bin/sh
+# AAFUGO installer: copies the extension into the REAPER UserPlugins folder of the logged-in user.
+USER_NAME=$(stat -f%Su /dev/console)
+USER_HOME=$(dscl . -read "/Users/$USER_NAME" NFSHomeDirectory | awk '{print $2}')
+DEST="$USER_HOME/Library/Application Support/REAPER/UserPlugins"
+mkdir -p "$DEST"
+cp -f /tmp/aafugo-install/reaper_aafugo.dylib "$DEST/"
+# remove the quarantine flag so REAPER can load it
+xattr -d com.apple.quarantine "$DEST/reaper_aafugo.dylib" 2>/dev/null
+chown "$USER_NAME" "$DEST/reaper_aafugo.dylib"
+rm -rf /tmp/aafugo-install
+exit 0

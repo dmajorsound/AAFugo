@@ -19,6 +19,7 @@ STEPS = [
            "Blocked? Open Privacy & Security, scroll down and click Open Anyway."]),
     ("3", ["Double-click Install %s again and choose Open." % NAME]),
 ]
+LOGO = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "mac_ui", "logo.png")
 FOOT = "Quit REAPER first. The installer is free and not signed by Apple, so macOS asks once."
 
 
@@ -64,6 +65,13 @@ def draw(fonts, s):
             d.text((52 * s, (y + i * 20) * s), ln, font=step, fill=INK, anchor="lm")
         y += 20 * len(lines) + 4 if len(lines) > 1 else 20
     d.text((24 * s, 393 * s), FOOT, font=small, fill=MUTE, anchor="lm")
+    # dmajorsound logo top right: 36 px high, right edge at x = 616, top at y = 16
+    if LOGO and os.path.isfile(LOGO):
+        lg = Image.open(LOGO).convert("RGBA")
+        h = 36 * s
+        w = round(lg.width * h / lg.height)
+        lg = lg.resize((w, h), Image.LANCZOS)
+        im.paste(lg, (616 * s - w, 16 * s), lg)
     return im
 
 
