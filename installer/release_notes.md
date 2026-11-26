@@ -8,7 +8,13 @@
 <h2 align="center">AAFUGO</h2>
 <p align="center"><i>Session Export for Reaper</i></p>
 
-AAFUGO hands a REAPER session to the mixer: AAF for Pro Tools, Nuendo/Cubase, Logic and Resolve, or DAWproject – with a Pre-Flight check, non-audio items sorted onto their own tracks and a Flight Report.
+AAFUGO hands a REAPER session to the mixer.
+
+**This first beta (0.1)** adds two actions to **Extensions**:
+- **AAFUGO: Export session…** – saves the project, shows the Pre-Flight list and exports a DAWproject (Nuendo/Cubase, Studio One, Bitwig) with folders, plugins, colors, fades and clip gain into the folder *AAFUGO export* next to your project.
+- **AAFUGO: Sort non-audio items onto their own tracks** – MIDI, video and empty items go onto NON-AUDIO tracks (one undo step).
+
+AAF for Pro Tools, Logic and Resolve, rendering of items with FX or pitch, the boarding-pass dialog and the Flight Report follow in the next versions.
 
 ### Download
 - **Mac** (Apple Silicon and Intel): `AAFUGO-VERSION-mac.dmg` below
@@ -17,7 +23,7 @@ AAFUGO hands a REAPER session to the mixer: AAF for Pro Tools, Nuendo/Cubase, Lo
 ### Install
 1. Quit REAPER first.
 2. **Mac:** open the .dmg and double-click **Install AAFUGO**. **Windows:** open the installer. Click through; it puts AAFUGO into the REAPER UserPlugins folder.
-3. Start REAPER and open **Extensions → AAFUGO**.
+3. Start REAPER and open **Extensions → AAFUGO: Export session…**
 
 ### Uninstall
 - **Mac:** quit REAPER, open the .dmg and double-click **Uninstall AAFUGO** (also below as `AAFUGO-VERSION-mac-uninstall.pkg`).

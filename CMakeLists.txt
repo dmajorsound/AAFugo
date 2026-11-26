@@ -24,3 +24,8 @@ endif()
 
 add_executable(aafugo-cli src/cli/main.cpp)
 target_link_libraries(aafugo-cli PRIVATE aafugo_core)
+
+option(AAFUGO_BUILD_EXTENSION "Build the REAPER extension" ON)
+if(AAFUGO_BUILD_EXTENSION)
+  add_subdirectory(src/ext)
+endif()
