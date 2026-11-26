@@ -25,7 +25,21 @@ WizardImageStretch=no
 DisableWelcomePage=no
 
 [Files]
+Source: "welcome-icon-100.bmp"; DestDir: "{tmp}"; Flags: dontcopy
+Source: "welcome-icon-200.bmp"; DestDir: "{tmp}"; Flags: dontcopy
+Source: "welcome-brand-100.bmp"; DestDir: "{tmp}"; Flags: dontcopy
+Source: "welcome-brand-200.bmp"; DestDir: "{tmp}"; Flags: dontcopy
 Source: "..\..\build\src\ext\Release\reaper_aafugo.dll"; DestDir: "{app}"; Flags: ignoreversion
 
 [Messages]
 SelectDirLabel3=AAFUGO goes into the REAPER UserPlugins folder. Change it only if you use a portable REAPER install.
+
+[Code]
+#include "branding.iss"
+
+procedure InitializeWizard();
+begin
+  BrandWelcome('AAFUGO - Session Export for Reaper',
+    'This installs the AAFUGO extension into the REAPER UserPlugins folder.' + #13#10 + #13#10 +
+    'Quit REAPER first. Afterwards, start REAPER and open Extensions > AAFUGO.');
+end;

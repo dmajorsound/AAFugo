@@ -38,7 +38,14 @@ FinishedHeadingLabel=AAFUGO is removed
 FinishedLabelNoIcons=AAFUGO has been removed from REAPER. Restart REAPER if it was open.
 FinishedLabel=AAFUGO has been removed from REAPER. Restart REAPER if it was open.
 
+[Files]
+Source: "welcome-icon-100.bmp"; DestDir: "{tmp}"; Flags: dontcopy
+Source: "welcome-icon-200.bmp"; DestDir: "{tmp}"; Flags: dontcopy
+Source: "welcome-brand-100.bmp"; DestDir: "{tmp}"; Flags: dontcopy
+Source: "welcome-brand-200.bmp"; DestDir: "{tmp}"; Flags: dontcopy
+
 [Code]
+#include "branding.iss"
 procedure CurStepChanged(CurStep: TSetupStep);
 var
   Unins, Dll: String;
@@ -55,4 +62,11 @@ begin
            'Quit REAPER and run this uninstaller again.', mbError, MB_OK);
   RegDeleteKeyIncludingSubkeys(HKCU, 'Software\Microsoft\Windows\CurrentVersion\Uninstall\AAFUGO_is1');
   DelTree(ExpandConstant('{userappdata}\dmajorsound\AAFUGO'), True, True, True);
+end;
+
+procedure InitializeWizard();
+begin
+  BrandWelcome('Uninstall AAFUGO',
+    'This removes the AAFUGO extension from REAPER.' + #13#10 + #13#10 +
+    'Quit REAPER first. Your projects stay untouched.');
 end;
