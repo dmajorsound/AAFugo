@@ -6,6 +6,7 @@
 //    (DAWproject for Nuendo/Cubase, Studio One, Bitwig) into "<project folder>/AAFUGO export".
 //  * "AAFUGO: Sort non-audio items onto their own tracks"  moves MIDI, video, empty / notes items
 //    and other non-audio items onto "NON-AUDIO - ..." tracks (one undo step).
+//  * "AAFUGO: Read manual"  opens the online manual in the default browser.
 
 #include <algorithm>
 #include <cstring>
@@ -19,6 +20,12 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <shellapi.h>
+#else
+#include <spawn.h>
+#include <sys/wait.h>
+#include <thread>
+extern char **environ;
 #endif
 
 #define REAPERAPI_IMPLEMENT
@@ -48,8 +55,35 @@
 
 namespace fs = std::filesystem;
 
-static int g_cmdExport = 0, g_cmdSort = 0;
+static int g_cmdExport = 0, g_cmdSort = 0, g_cmdManual = 0;
 static const char *kTitle = "AAFUGO";
+static const char *kManualUrl = "https://dmajorsound.com/software/aafugo/manual.html";
+
+// ---------------------------------------------------------------- manual
+
+// Opens a fixed https URL in the default browser (no shell involved).
+static void openWebPage(const char *url) {
+#ifdef _WIN32
+  int n = MultiByteToWideChar(CP_UTF8, 0, url, -1, NULL, 0);
+  std::vector<wchar_t> w((size_t)n);
+  MultiByteToWideChar(CP_UTF8, 0, url, -1, w.data(), n);
+  ShellExecuteW(NULL, L"open", w.data(), NULL, NULL, SW_SHOWNORMAL);
+#else
+#ifdef __APPLE__
+  const char *tool = "/usr/bin/open";
+#else
+  const char *tool = "xdg-open";
+#endif
+  pid_t pid;
+  char *argv[] = {(char *)tool, (char *)url, NULL};
+  if (posix_spawnp(&pid, tool, NULL, NULL, argv, environ) == 0) {
+    std::thread([pid]() {
+      int st;
+      waitpid(pid, &st, 0);
+    }).detach();
+  }
+#endif
+}
 
 // ---------------------------------------------------------------- export
 
@@ -173,6 +207,10 @@ static bool onAction(KbdSectionInfo *, int command, int, int, int, HWND) {
     sortNonAudio();
     return true;
   }
+  if (command == g_cmdManual && g_cmdManual) {
+    openWebPage(kManualUrl);
+    return true;
+  }
   return false;
 }
 
@@ -191,6 +229,7 @@ static void menuHook(const char *menuId, void *menu, int flag) {
   if (flag != 0 || !menu || strcmp(menuId, "Main extensions")) return;
   if (g_cmdExport) addItem((HMENU)menu, g_cmdExport, "AAFUGO: Export session...");
   if (g_cmdSort) addItem((HMENU)menu, g_cmdSort, "AAFUGO: Sort non-audio items onto their own tracks");
+  if (g_cmdManual) addItem((HMENU)menu, g_cmdManual, "AAFUGO: Read manual");
 }
 
 extern "C" REAPER_PLUGIN_DLL_EXPORT int REAPER_PLUGIN_ENTRYPOINT(REAPER_PLUGIN_HINSTANCE, reaper_plugin_info_t *rec) {
@@ -205,6 +244,8 @@ extern "C" REAPER_PLUGIN_DLL_EXPORT int REAPER_PLUGIN_ENTRYPOINT(REAPER_PLUGIN_H
   static custom_action_register_t srt = {0, "DMAJORSOUND_AAFUGO_SORT", "AAFUGO: Sort non-audio items onto their own tracks", nullptr};
   g_cmdExport = plugin_register("custom_action", &exp);
   g_cmdSort = plugin_register("custom_action", &srt);
+  static custom_action_register_t man = {0, "DMAJORSOUND_AAFUGO_MANUAL", "AAFUGO: Read manual", nullptr};
+  g_cmdManual = plugin_register("custom_action", &man);
   plugin_register("hookcommand2", (void *)onAction);
   AddExtensionsMainMenu();
   plugin_register("hookcustommenu", (void *)menuHook);
